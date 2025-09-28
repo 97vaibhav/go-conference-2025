@@ -14,11 +14,11 @@ import (
 
 func cpuBound(id int, iters int, wg *sync.WaitGroup) {
 	defer wg.Done()
-	sum := 0
+	sum := id
 	for i := 0; i < iters; i++ {
 		sum += i ^ (i >> 3)
 		if i%500000 == 0 {
-			// Hint to runtime: allow preemption points
+			// allow preemption points
 			runtime.Gosched()
 		}
 	}
@@ -27,8 +27,9 @@ func cpuBound(id int, iters int, wg *sync.WaitGroup) {
 
 func ioBlocked(id int, wg *sync.WaitGroup) {
 	defer wg.Done()
-	// Simulate “blocking” on sleep to show goroutine parking/unparking
+	// Simulate "blocking" on sleep to show goroutine parking/unparking
 	time.Sleep(300 * time.Millisecond)
+	_ = id
 }
 
 func main() {
